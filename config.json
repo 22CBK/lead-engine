@@ -1,0 +1,15 @@
+{
+  "search_queries": [
+    "gym in chennai"
+  ],
+  "high_value_areas": [
+    "chennai"
+  ],
+  "high_value_categories": [
+    "gym"
+  ],
+  "ai_provider": "groq",
+  "api_endpoint": "https://api.groq.com/openai/v1/chat/completions",
+  "ai_model": "llama-3.1-8b-instant",
+  "api_key": ""
+}

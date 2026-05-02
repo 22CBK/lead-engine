@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LocalLead - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container": "#e2e4ea",
+                "primary": "#6366f1",
+                "on-primary-container": "#e0e2ff",
+                "surface-container-highest": "#d6d8de",
+                "on-tertiary-container": "#3b1f63",
+                "error-container": "#fee2e2",
+                "error": "#dc2626",
+                "on-primary-fixed": "#1e1b4b",
+                "on-tertiary-fixed": "#2e1065",
+                "surface-dim": "#d4d6dc",
+                "on-surface": "#2e3040",
+                "surface-container-high": "#dcdee4",
+                "secondary-container": "#d8dae6",
+                "primary-fixed": "#e0e2ff",
+                "surface-container-lowest": "#f0f2f8",
+                "secondary-fixed-dim": "#b8baca",
+                "inverse-surface": "#2e3040",
+                "primary-fixed-dim": "#a5b4fc",
+                "tertiary-container": "#a78bfa",
+                "surface-variant": "#dcdee4",
+                "tertiary-fixed-dim": "#c4b5fd",
+                "on-secondary-container": "#585a68",
+                "on-primary-fixed-variant": "#4338ca",
+                "on-error-container": "#991b1b",
+                "on-secondary": "#ffffff",
+                "on-tertiary-fixed-variant": "#5b21b6",
+                "tertiary-fixed": "#ede9fe",
+                "on-tertiary": "#ffffff",
+                "on-surface-variant": "#585a68",
+                "surface-tint": "#6366f1",
+                "inverse-on-surface": "#e8eaf0",
+                "secondary": "#6c6e7e",
+                "on-background": "#2e3040",
+                "on-secondary-fixed": "#1a1b26",
+                "on-primary": "#ffffff",
+                "on-error": "#ffffff",
+                "surface-bright": "#edeef4",
+                "surface": "#e8eaf0",
+                "surface-container-low": "#e5e7ed",
+                "on-secondary-fixed-variant": "#404252",
+                "tertiary": "#7c3aed",
+                "secondary-fixed": "#d8dae6",
+                "primary-container": "#818cf8",
+                "background": "#e8eaf0",
+                "outline-variant": "#d0d2dc",
+                "outline": "#8a8c9a",
+                "inverse-primary": "#a5b4fc"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.5rem",
+                "lg": "1rem",
+                "xl": "1.5rem",
+                "full": "9999px"
+        },
+        "fontFamily": {
+                "headline": ["Plus Jakarta Sans"],
+                "display": ["Plus Jakarta Sans"],
+                "body": ["Plus Jakarta Sans"],
+                "label": ["Plus Jakarta Sans"]
+        }
+      }
+    }
+  }
+</script>
+<style>
+    .bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+    .neomorphic-card {
+        background: rgba(240, 242, 248, 0.7);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 8px 8px 16px rgba(174, 174, 192, 0.4), -8px -8px 16px rgba(255, 255, 255, 0.9);
+    }
+    .neomorphic-inset {
+        background: rgba(240, 242, 248, 0.5);
+        box-shadow: inset 4px 4px 8px rgba(174, 174, 192, 0.3), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    .neomorphic-button {
+        background: linear-gradient(135deg, #f0f2f8, #e2e4ea);
+        box-shadow: 4px 4px 8px rgba(174, 174, 192, 0.4), -4px -4px 8px rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        transition: all 0.2s ease;
+    }
+    .neomorphic-button:active { box-shadow: inset 4px 4px 8px rgba(174, 174, 192, 0.4), inset -4px -4px 8px rgba(255, 255, 255, 0.9); }
+    .neomorphic-button-primary {
+        background: linear-gradient(135deg, #818cf8, #6366f1);
+        box-shadow: 4px 4px 8px rgba(99, 102, 241, 0.3), -4px -4px 8px rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(165, 180, 252, 0.5);
+        transition: all 0.2s ease;
+    }
+    .neomorphic-button-primary:active { box-shadow: inset 4px 4px 8px rgba(67, 56, 202, 0.4), inset -4px -4px 8px rgba(165, 180, 252, 0.6); }
+    .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(174, 174, 192, 0.4); border-radius: 20px; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-surface-container-lowest to-surface-container text-on-background font-body h-screen overflow-hidden flex relative">
+    
+<!-- Decorative blurred background elements -->
+<div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-container/20 rounded-full mix-blend-multiply filter blur-[100px] z-0 pointer-events-none"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-tertiary-container/20 rounded-full mix-blend-multiply filter blur-[120px] z-0 pointer-events-none"></div>
+
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 bottom-0 z-50 flex flex-col p-4 h-screen w-64 bg-white/40 backdrop-blur-xl border-r border-white/50 shadow-[4px_0_24px_-10px_rgba(0,0,0,0.05)] font-body text-sm antialiased text-primary">
+    <div class="mb-8 px-4 flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-primary/20 backdrop-blur-md border border-white/50 flex items-center justify-center text-primary font-bold shadow-[inset_2px_2px_4px_rgba(255,255,255,0.5),2px_2px_4px_rgba(0,0,0,0.05)]">LL</div>
+        <div>
+            <h1 class="text-xl font-black text-on-surface tracking-tighter">LocalLead</h1>
+            <p class="text-xs text-on-surface-variant font-medium">Command Center</p>
+        </div>
+    </div>
+    
+    <div class="flex-1 flex flex-col gap-2">
+        <a class="flex items-center gap-3 px-4 py-3 {% if active_tab == 'dashboard' %}bg-white/60 backdrop-blur-md border border-white/50 text-primary shadow-[inset_2px_2px_4px_rgba(255,255,255,0.5),2px_2px_8px_rgba(0,0,0,0.02)]{% else %}text-on-surface-variant hover:text-primary hover:bg-white/50 backdrop-blur-sm{% endif %} rounded-xl transition-all duration-200" href="/">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' {% if active_tab == 'dashboard' %}1{% else %}0{% endif %};">dashboard</span>
+            Dashboard
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 {% if active_tab == 'leads' %}bg-white/60 backdrop-blur-md border border-white/50 text-primary shadow-[inset_2px_2px_4px_rgba(255,255,255,0.5),2px_2px_8px_rgba(0,0,0,0.02)]{% else %}text-on-surface-variant hover:text-primary hover:bg-white/50 backdrop-blur-sm{% endif %} rounded-xl transition-all duration-200" href="/leads">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' {% if active_tab == 'leads' %}1{% else %}0{% endif %};">table_view</span>
+            All Leads
+        </a>
+    </div>
+</nav>
+
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col ml-64 overflow-hidden relative z-10">
+    <!-- TopAppBar -->
+    <header class="sticky top-0 right-0 z-40 flex items-center justify-between px-8 w-full bg-white/40 backdrop-blur-xl h-16 border-b border-white/50 shadow-[0_4px_24px_-12px_rgba(0,0,0,0.05)] font-body font-medium tracking-tight text-primary">
+        <div class="flex items-center gap-4 flex-1">
+            <h2 class="text-xl font-bold text-on-surface">{% if active_tab == 'dashboard' %}Dashboard{% else %}Leads Directory{% endif %}</h2>
+        </div>
+        <div class="flex items-center gap-6">
+            {% if message %}
+            <div class="text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full animate-pulse">{{ message }}</div>
+            {% endif %}
+            
+            <a href="/export" class="flex items-center gap-2 px-4 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary font-bold text-sm rounded-full transition-colors border border-primary/20">
+                <span class="material-symbols-outlined text-[18px]">download</span> Export CSV
+            </a>
+
+            <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">person</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Canvas -->
+    <main class="flex-1 overflow-y-auto p-8 custom-scrollbar relative">
+        <div class="max-w-[1400px] mx-auto relative z-10">
+
+            {% if active_tab == 'dashboard' %}
+            
+            <!-- Settings Form (Neomorphic Card) -->
+            <div class="neomorphic-card rounded-2xl p-6 mb-8">
+                <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2"><span class="material-symbols-outlined">settings_suggest</span> Run Engine & Settings</h3>
+                <form action="{{ url_for('run_engine') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold tracking-wider uppercase text-on-surface-variant mb-2" for="categories">Categories (comma separated)</label>
+                        <input class="w-full px-4 py-2 bg-white/50 backdrop-blur-md border border-white/70 rounded-xl text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-[inset_1px_1px_4px_rgba(0,0,0,0.03)] text-on-surface" type="text" id="categories" name="categories" value="{{ current_categories }}" placeholder="e.g. schools, salons" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold tracking-wider uppercase text-on-surface-variant mb-2" for="locations">Locations (comma separated)</label>
+                        <input class="w-full px-4 py-2 bg-white/50 backdrop-blur-md border border-white/70 rounded-xl text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-[inset_1px_1px_4px_rgba(0,0,0,0.03)] text-on-surface" type="text" id="locations" name="locations" value="{{ current_locations }}" placeholder="e.g. Chennai, Bangalore" required>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end">
+                        <button type="submit" class="px-6 py-2.5 text-on-primary font-semibold text-sm rounded-lg flex items-center gap-2 neomorphic-button-primary">
+                            <span class="material-symbols-outlined text-[18px]">play_arrow</span> Save & Run Engine Background
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-on-background mb-2">Today's Top 15 Leads</h1>
+                <p class="text-lg text-on-surface-variant">High-probability targets prioritized for immediate outreach.</p>
+            </div>
+            
+            <div class="bento-grid">
+                {% if top_leads %}
+                    {% for lead in top_leads %}
+                    <div class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 neomorphic-card rounded-xl p-5 flex flex-col">
+                        <div class="flex justify-between items-start mb-3 gap-2">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-base font-bold text-on-surface truncate">{{ lead.business_name }}</h3>
+                                <p class="text-on-surface-variant text-xs mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">location_on</span> <span class="truncate">{{ lead.area }} • {{ lead.category }}</span>
+                                </p>
+                            </div>
+                            <div class="text-2xl font-black text-primary drop-shadow-sm flex-shrink-0">{{ lead.score }}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <p class="text-[11px] text-on-surface font-medium">Rating: {{ lead.rating }} ({{ lead.reviews }}) {% if lead.website %}| Web: Yes{% else %}| No Web{% endif %}</p>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-[10px] font-bold text-error mb-0.5 uppercase tracking-wider drop-shadow-sm">Why Target</div>
+                            <p class="text-xs text-on-surface line-clamp-2">{{ lead.why_good_lead }}</p>
+                        </div>
+                        <div class="neomorphic-inset rounded-lg p-3 mb-4 flex-1 text-xs text-on-surface-variant italic relative group/pitch" id="pitch-{{ lead.id }}">
+                            "{{ lead.suggested_pitch }}"
+                        </div>
+                        <div class="flex justify-between items-center gap-2 mt-auto">
+                            <form action="/update-status" method="POST" class="flex-1">
+                                <input type="hidden" name="lead_id" value="{{ lead.id }}">
+                                <input type="hidden" name="status" value="Contacted">
+                                <button type="submit" class="w-full py-2 text-on-primary bg-primary font-semibold text-xs rounded-lg flex items-center justify-center gap-1 shadow-sm hover:opacity-90">
+                                    <span class="material-symbols-outlined text-[16px]">check</span> Contacted
+                                </button>
+                            </form>
+                            <button class="flex-1 py-2 text-on-surface font-semibold text-xs rounded-lg flex items-center justify-center gap-1 neomorphic-button" onclick="copyPitch({{ lead.id }})">
+                                <span class="material-symbols-outlined text-[16px]">content_copy</span> Copy
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-span-12 neomorphic-card rounded-2xl p-6 text-center text-on-surface-variant">
+                        No AI pitches generated yet. Configure settings and Run Engine!
+                    </div>
+                {% endif %}
+            </div>
+
+            {% elif active_tab == 'leads' %}
+
+            <!-- Table Container -->
+            <div class="bg-white/40 backdrop-blur-xl border border-white/60 rounded-2xl shadow-[inset_2px_2px_4px_rgba(255,255,255,0.4),0_8px_32px_rgba(0,0,0,0.04)] overflow-hidden flex-1 relative">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-white/30 backdrop-blur-md border-b border-white/50">
+                        <tr>
+                            <th class="px-6 py-4 text-xs font-bold tracking-wider uppercase text-on-surface-variant">Name</th>
+                            <th class="px-6 py-4 text-xs font-bold tracking-wider uppercase text-on-surface-variant">Area</th>
+                            <th class="px-6 py-4 text-xs font-bold tracking-wider uppercase text-on-surface-variant">Category</th>
+                            <th class="px-6 py-4 text-xs font-bold tracking-wider uppercase text-on-surface-variant">Score</th>
+                            <th class="px-6 py-4 text-xs font-bold tracking-wider uppercase text-on-surface-variant">Added</th>
+                            <th class="px-6 py-4 text-xs font-bold tracking-wider uppercase text-on-surface-variant">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/30 text-sm">
+                        {% for lead in all_leads %}
+                        <tr class="hover:bg-white/40 transition-colors group">
+                            <td class="px-6 py-4">
+                                <div class="font-semibold text-on-surface">{{ lead.business_name }}</div>
+                            </td>
+                            <td class="px-6 py-4 text-on-surface-variant">{{ lead.area }}</td>
+                            <td class="px-6 py-4 text-on-surface-variant">{{ lead.category }}</td>
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center justify-center px-2 py-1 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/20 text-primary font-semibold text-xs min-w-[32px] shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4)]">{{ lead.score }}</span>
+                            </td>
+                            <td class="px-6 py-4 text-on-surface-variant">{{ lead.date_added }}</td>
+                            <td class="px-6 py-4 text-right">
+                                <form action="/update-status" method="POST">
+                                    <input type="hidden" name="lead_id" value="{{ lead.id }}">
+                                    <select name="status" class="px-3 py-1.5 bg-white/50 backdrop-blur-md border border-white/70 rounded-xl text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none transition-all font-semibold shadow-[inset_1px_1px_4px_rgba(0,0,0,0.03)] cursor-pointer {% if lead.status == 'Contacted' %}text-[#f39c12]{% elif lead.status == 'Closed' %}text-[#27ae60]{% else %}text-on-surface-variant{% endif %}" onchange="this.form.submit()">
+                                        <option value="New" {% if lead.status == 'New' %}selected{% endif %}>New</option>
+                                        <option value="Contacted" {% if lead.status == 'Contacted' %}selected{% endif %}>Contacted</option>
+                                        <option value="Closed" {% if lead.status == 'Closed' %}selected{% endif %}>Closed</option>
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="6" class="px-6 py-4 text-center text-on-surface-variant">No leads found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% endif %}
+
+        </div>
+    </main>
+</div>
+
+<script>
+    function copyPitch(id) {
+        let pitchText = document.getElementById('pitch-' + id).innerText;
+        // Strip quotes if they surround the text
+        if(pitchText.startsWith('"') && pitchText.endsWith('"')) {
+            pitchText = pitchText.substring(1, pitchText.length - 1);
+        }
+        navigator.clipboard.writeText(pitchText).then(() => {
+            alert('Copied to clipboard!');
+        });
+    }
+</script>
+</body>
+</html>
