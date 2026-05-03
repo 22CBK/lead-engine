@@ -19,7 +19,8 @@ OUTPUTS_DIR = os.path.join(os.path.dirname(__file__), 'outputs')
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'config.json')
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'scripts'))
-import runner
+import status_tracker
+from flask import jsonify
 
 import sqlite3
 
@@ -38,8 +39,7 @@ def get_config():
 @app.route('/')
 def index():
     config = get_config()
-    current_categories = ", ".join(config.get("high_value_categories", []))
-    current_locations = ", ".join(config.get("high_value_areas", []))
+    current_locations = ", ".join(config.get("sweep_locations", []))
     message = request.args.get('message')
     
     top_leads = []
@@ -51,14 +51,13 @@ def index():
         print("DB Error:", e)
     
     return render_template('index.html', top_leads=top_leads, 
-                           current_categories=current_categories, current_locations=current_locations, 
+                           current_locations=current_locations, 
                            message=message, active_tab='dashboard')
 
 @app.route('/leads')
 def view_leads():
     config = get_config()
-    current_categories = ", ".join(config.get("high_value_categories", []))
-    current_locations = ", ".join(config.get("high_value_areas", []))
+    current_locations = ", ".join(config.get("sweep_locations", []))
     
     all_leads = []
     try:
@@ -69,7 +68,7 @@ def view_leads():
         pass
         
     return render_template('index.html', all_leads=all_leads, 
-                           current_categories=current_categories, current_locations=current_locations, 
+                           current_locations=current_locations, 
                            active_tab='leads')
 
 @app.route('/update-status', methods=['POST'])
@@ -94,7 +93,7 @@ def export_leads():
         conn.close()
         
         def generate():
-            yield 'ID,Business Name,Category,Area,Rating,Reviews,Website,Phone,Score,Status,Date Added,Why Good Lead,Suggested Pitch\n'
+            yield 'ID,Business Name,Category,Area,Rating,Reviews,Website,Phone,Score,Status,Date Added,Lagging Aspect,Why Good Lead,Suggested Pitch\n'
             for lead in leads:
                 row = [
                     str(lead['id']),
@@ -108,6 +107,7 @@ def export_leads():
                     str(lead['score']),
                     f'"{lead["status"]}"' if lead['status'] else '',
                     f'"{lead["date_added"]}"' if lead['date_added'] else '',
+                    f'"{lead["lagging_aspect"]}"' if "lagging_aspect" in lead.keys() and lead['lagging_aspect'] else '',
                     f'"{lead["why_good_lead"]}"' if lead['why_good_lead'] else '',
                     f'"{lead["suggested_pitch"]}"' if lead['suggested_pitch'] else ''
                 ]
@@ -119,21 +119,20 @@ def export_leads():
 
 @app.route('/run', methods=['POST'])
 def run_engine():
-    categories_raw = request.form.get('categories', '')
     locations_raw = request.form.get('locations', '')
     
-    categories = [c.strip() for c in categories_raw.split(',') if c.strip()]
     locations = [l.strip() for l in locations_raw.split(',') if l.strip()]
     
+    config = get_config()
+    categories = config.get('system_categories', [])
+    
     queries = []
-    for loc in locations:
-        for cat in categories:
+    for cat in categories:
+        for loc in locations:
             queries.append(f"{cat} in {loc}")
             
-    config = get_config()
     config['search_queries'] = queries
-    config['high_value_categories'] = categories
-    config['high_value_areas'] = locations
+    config['sweep_locations'] = locations
     
     with open(CONFIG_PATH, 'w') as f:
         json.dump(config, f, indent=2)
@@ -144,5 +143,6 @@ def run_engine():
     
     return redirect(url_for('index', message="Engine started! The scraper and AI are running in the background. Please check back in a few minutes."))
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+@app.route('/api/status')
+def api_status():
+    return jsonify(status_tracker.get_status())

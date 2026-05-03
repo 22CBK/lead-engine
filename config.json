@@ -1,12 +1,34 @@
 {
   "search_queries": [
-    "gym in chennai"
+    "Restaurants in virugambakkam",
+    "Salons in virugambakkam",
+    "Gyms in virugambakkam",
+    "Clinics in virugambakkam",
+    "Dentists in virugambakkam",
+    "Plumbers in virugambakkam",
+    "Electricians in virugambakkam",
+    "Auto Repair in virugambakkam",
+    "Real Estate in virugambakkam",
+    "Lawyers in virugambakkam",
+    "Accountants in virugambakkam",
+    "Consultants in virugambakkam"
   ],
-  "high_value_areas": [
-    "chennai"
+  "sweep_locations": [
+    "virugambakkam"
   ],
-  "high_value_categories": [
-    "gym"
+  "system_categories": [
+    "Restaurants",
+    "Salons",
+    "Gyms",
+    "Clinics",
+    "Dentists",
+    "Plumbers",
+    "Electricians",
+    "Auto Repair",
+    "Real Estate",
+    "Lawyers",
+    "Accountants",
+    "Consultants"
   ],
   "ai_provider": "groq",
   "api_endpoint": "https://api.groq.com/openai/v1/chat/completions",

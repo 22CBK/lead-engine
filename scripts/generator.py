@@ -20,98 +20,84 @@ def load_prompt(leads_data_str):
         template = f.read()
     return template.replace('{leads_data}', leads_data_str)
 
-def generate_daily_plan(df):
-    if df.empty:
-        return "# No New Leads Today\n\nNo leads to process. Run scraper or add more data."
+def generate_daily_plan(scored_df):
+    if scored_df.empty:
+        return []
         
     config = get_config()
-    
-    # Take top 30 leads to give context to LLM
-    top_leads = df.head(30)
-    
-    # Format data for LLM
-    leads_str = ""
-    for i, row in top_leads.iterrows():
-        website = row.get('website', 'None')
-        if pd.isna(website) or website == 'nan': website = 'None'
-        
-        rating = row.get('rating', 'None')
-        if pd.isna(rating) or rating == 'nan': rating = 'None'
-        
-        reviews = row.get('reviews', 0)
-        leads_str += f"- Name: {row.get('business_name')}\n"
-        leads_str += f"  Category: {row.get('category')}\n"
-        leads_str += f"  Area: {row.get('area')}\n"
-        leads_str += f"  Rating: {rating} ({reviews} reviews)\n"
-        leads_str += f"  Website: {website}\n"
-        leads_str += f"  Score: {row.get('score')}\n\n"
-        
-    prompt = load_prompt(leads_str)
-    
     api_key = os.environ.get('GROQ_API_KEY', '')
     endpoint = config.get('api_endpoint', 'https://api.groq.com/openai/v1/chat/completions')
     model = config.get('ai_model', 'llama-3.1-8b-instant')
-    provider = config.get('ai_provider', 'groq')
     
     if not api_key:
-        print(f"Error: Missing {provider.capitalize()} API Key")
+        print("Error: GROQ_API_KEY not found in environment.")
         return []
-    
-    print(f"Sending data to {provider.capitalize()} API ({model}) at {endpoint}...")
-    
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-    
-    payload = {
-        "model": model,
-        "response_format": {"type": "json_object"},
-        "messages": [
-            {"role": "system", "content": "You are a helpful sales AI. You MUST respond with ONLY a valid JSON object containing a key 'leads' that holds an array of lead objects. Example: {\"leads\": [{\"business_name\": \"...\", \"why_good_lead\": \"...\", \"suggested_pitch\": \"...\"}]}"},
-            {"role": "user", "content": prompt}
-        ],
-        "temperature": 0.3
-    }
-    
-    try:
-        response = requests.post(endpoint, headers=headers, json=payload, timeout=120)
-        response.raise_for_status()
-        data = response.json()
-        content = data.get('choices', [{}])[0].get('message', {}).get('content', "")
         
-        import re
-        import json as json_lib
+    # Process up to 100 leads in batches of 20
+    top_leads = scored_df.head(100)
+    chunk_size = 20
+    chunks = [top_leads[i:i+chunk_size] for i in range(0, top_leads.shape[0], chunk_size)]
+    
+    all_ai_results = []
+    
+    for i, chunk in enumerate(chunks):
+        print(f"Processing AI batch {i+1}/{len(chunks)} ({len(chunk)} leads)...")
         
-        # Try to parse the json
-        try:
-            parsed = json_lib.loads(content)
-            if 'leads' in parsed:
-                return parsed['leads']
-            elif isinstance(parsed, list):
-                return parsed
-            else:
-                return []
-        except:
-            # Fallback regex extraction if the LLM surrounds it with ```json
-            match = re.search(r'```json\s*(.*?)\s*```', content, re.DOTALL)
-            if match:
-                parsed = json_lib.loads(match.group(1))
-                if 'leads' in parsed:
-                    return parsed['leads']
-                elif isinstance(parsed, list):
-                    return parsed
-            return []
+        leads_data = []
+        for _, row in chunk.iterrows():
+            leads_data.append({
+                "business_name": row['business_name'],
+                "category": row['category'],
+                "rating": row['rating'],
+                "reviews": row['reviews'],
+                "score": row['score']
+            })
             
-    except Exception as e:
-        error_msg = f"Failed to generate plan with API: {e}"
-        print(error_msg)
-        return []
+        leads_str = json.dumps(leads_data, indent=2)
+        prompt = load_prompt(leads_str)
+        
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "model": model,
+            "response_format": {"type": "json_object"},
+            "messages": [
+                {"role": "system", "content": "You are a helpful sales AI. You MUST respond with ONLY a valid JSON object containing a key 'leads' that holds an array of lead objects. Example: {\"leads\": [{\"business_name\": \"...\", \"lagging_aspect\": \"...\", \"why_good_lead\": \"...\", \"suggested_pitch\": \"...\"}]}"},
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.3
+        }
+        
+        try:
+            response = requests.post(endpoint, headers=headers, json=payload)
+            response.raise_for_status()
+            
+            result_json = response.json()
+            content = result_json['choices'][0]['message']['content']
+            
+            content = content.strip()
+            if content.startswith('```json'):
+                content = content[7:]
+            if content.startswith('```'):
+                content = content[3:]
+            if content.endswith('```'):
+                content = content[:-3]
+                
+            parsed = json.loads(content)
+            leads = parsed.get("leads", [])
+            all_ai_results.extend(leads)
+            
+        except Exception as e:
+            print(f"Failed to generate plan for batch {i+1}: {e}")
+            
+    return all_ai_results
 
 if __name__ == "__main__":
     import processor
     import scorer
-    import pandas as pd
     df = processor.process_leads()
     scored_df = scorer.score_leads(df)
     print(generate_daily_plan(scored_df))

@@ -4,6 +4,7 @@ import csv
 import time
 from datetime import datetime
 from playwright.sync_api import sync_playwright
+import status_tracker
 
 def get_config():
     config_path = os.path.join(os.path.dirname(__file__), '..', 'config.json')
@@ -89,7 +90,8 @@ def run_scraper():
         )
         page = context.new_page()
         
-        for query in queries:
+        for i, query in enumerate(queries):
+            status_tracker.update_status("running", f"Scraping category: {query.split(' in ')[0]} ({i+1}/{len(queries)})", 10 + int((i/len(queries))*30))
             results = scrape_query(page, query)
             all_results.extend(results)
             time.sleep(2) # be nice

@@ -4,117 +4,27 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>LocalLead - Dashboard</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-  tailwind.config = {
-    darkMode: "class",
-    theme: {
-      extend: {
-        "colors": {
-                "surface-container": "#e2e4ea",
-                "primary": "#6366f1",
-                "on-primary-container": "#e0e2ff",
-                "surface-container-highest": "#d6d8de",
-                "on-tertiary-container": "#3b1f63",
-                "error-container": "#fee2e2",
-                "error": "#dc2626",
-                "on-primary-fixed": "#1e1b4b",
-                "on-tertiary-fixed": "#2e1065",
-                "surface-dim": "#d4d6dc",
-                "on-surface": "#2e3040",
-                "surface-container-high": "#dcdee4",
-                "secondary-container": "#d8dae6",
-                "primary-fixed": "#e0e2ff",
-                "surface-container-lowest": "#f0f2f8",
-                "secondary-fixed-dim": "#b8baca",
-                "inverse-surface": "#2e3040",
-                "primary-fixed-dim": "#a5b4fc",
-                "tertiary-container": "#a78bfa",
-                "surface-variant": "#dcdee4",
-                "tertiary-fixed-dim": "#c4b5fd",
-                "on-secondary-container": "#585a68",
-                "on-primary-fixed-variant": "#4338ca",
-                "on-error-container": "#991b1b",
-                "on-secondary": "#ffffff",
-                "on-tertiary-fixed-variant": "#5b21b6",
-                "tertiary-fixed": "#ede9fe",
-                "on-tertiary": "#ffffff",
-                "on-surface-variant": "#585a68",
-                "surface-tint": "#6366f1",
-                "inverse-on-surface": "#e8eaf0",
-                "secondary": "#6c6e7e",
-                "on-background": "#2e3040",
-                "on-secondary-fixed": "#1a1b26",
-                "on-primary": "#ffffff",
-                "on-error": "#ffffff",
-                "surface-bright": "#edeef4",
-                "surface": "#e8eaf0",
-                "surface-container-low": "#e5e7ed",
-                "on-secondary-fixed-variant": "#404252",
-                "tertiary": "#7c3aed",
-                "secondary-fixed": "#d8dae6",
-                "primary-container": "#818cf8",
-                "background": "#e8eaf0",
-                "outline-variant": "#d0d2dc",
-                "outline": "#8a8c9a",
-                "inverse-primary": "#a5b4fc"
-        },
-        "borderRadius": {
-                "DEFAULT": "0.5rem",
-                "lg": "1rem",
-                "xl": "1.5rem",
-                "full": "9999px"
-        },
-        "fontFamily": {
-                "headline": ["Plus Jakarta Sans"],
-                "display": ["Plus Jakarta Sans"],
-                "body": ["Plus Jakarta Sans"],
-                "label": ["Plus Jakarta Sans"]
-        }
-      }
-    }
-  }
-</script>
-<style>
-    .bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
-    .neomorphic-card {
-        background: rgba(240, 242, 248, 0.7);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.8);
-        box-shadow: 8px 8px 16px rgba(174, 174, 192, 0.4), -8px -8px 16px rgba(255, 255, 255, 0.9);
-    }
-    .neomorphic-inset {
-        background: rgba(240, 242, 248, 0.5);
-        box-shadow: inset 4px 4px 8px rgba(174, 174, 192, 0.3), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-    }
-    .neomorphic-button {
-        background: linear-gradient(135deg, #f0f2f8, #e2e4ea);
-        box-shadow: 4px 4px 8px rgba(174, 174, 192, 0.4), -4px -4px 8px rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        transition: all 0.2s ease;
-    }
-    .neomorphic-button:active { box-shadow: inset 4px 4px 8px rgba(174, 174, 192, 0.4), inset -4px -4px 8px rgba(255, 255, 255, 0.9); }
-    .neomorphic-button-primary {
-        background: linear-gradient(135deg, #818cf8, #6366f1);
-        box-shadow: 4px 4px 8px rgba(99, 102, 241, 0.3), -4px -4px 8px rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(165, 180, 252, 0.5);
-        transition: all 0.2s ease;
-    }
-    .neomorphic-button-primary:active { box-shadow: inset 4px 4px 8px rgba(67, 56, 202, 0.4), inset -4px -4px 8px rgba(165, 180, 252, 0.6); }
-    .custom-scrollbar::-webkit-scrollbar { width: 8px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(174, 174, 192, 0.4); border-radius: 20px; }
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
 </head>
 <body class="bg-gradient-to-br from-surface-container-lowest to-surface-container text-on-background font-body h-screen overflow-hidden flex relative">
     
 <!-- Decorative blurred background elements -->
 <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-container/20 rounded-full mix-blend-multiply filter blur-[100px] z-0 pointer-events-none"></div>
 <div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-tertiary-container/20 rounded-full mix-blend-multiply filter blur-[120px] z-0 pointer-events-none"></div>
+
+<!-- Persistent Side Drawer for Live Progress -->
+<div id="progressDrawer" class="fixed top-0 right-0 h-screen w-[380px] bg-white/90 backdrop-blur-2xl shadow-[-10px_0_30px_rgba(0,0,0,0.1)] border-l border-white/50 z-[100] translate-x-full transition-transform duration-300 ease-out flex flex-col">
+    <div class="p-6 border-b border-white/50 bg-primary/5 flex justify-between items-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent animate-pulse pointer-events-none"></div>
+        <h2 class="text-lg font-bold text-primary flex items-center gap-2 relative z-10"><span class="material-symbols-outlined animate-spin">refresh</span> Engine Running</h2>
+        <button onclick="closeDrawer()" class="w-8 h-8 rounded-full bg-white/80 hover:bg-white text-on-surface-variant hover:text-error flex items-center justify-center transition-colors shadow-sm relative z-10">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar" id="drawerContent">
+        <!-- Progress items will be injected here -->
+    </div>
+</div>
 
 <!-- SideNavBar -->
 <nav class="fixed left-0 top-0 bottom-0 z-50 flex flex-col p-4 h-screen w-64 bg-white/40 backdrop-blur-xl border-r border-white/50 shadow-[4px_0_24px_-10px_rgba(0,0,0,0.05)] font-body text-sm antialiased text-primary">
@@ -169,32 +79,35 @@
             <!-- Settings Form (Neomorphic Card) -->
             <div class="neomorphic-card rounded-2xl p-6 mb-8">
                 <h3 class="text-lg font-bold text-on-surface mb-4 flex items-center gap-2"><span class="material-symbols-outlined">settings_suggest</span> Run Engine & Settings</h3>
-                <form action="{{ url_for('run_engine') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs font-bold tracking-wider uppercase text-on-surface-variant mb-2" for="categories">Categories (comma separated)</label>
-                        <input class="w-full px-4 py-2 bg-white/50 backdrop-blur-md border border-white/70 rounded-xl text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-[inset_1px_1px_4px_rgba(0,0,0,0.03)] text-on-surface" type="text" id="categories" name="categories" value="{{ current_categories }}" placeholder="e.g. schools, salons" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold tracking-wider uppercase text-on-surface-variant mb-2" for="locations">Locations (comma separated)</label>
+                <form id="runForm" class="flex items-end gap-6">
+                    <div class="flex-1">
+                        <label class="block text-xs font-bold tracking-wider uppercase text-on-surface-variant mb-2" for="locations">Locations to Sweep (comma separated)</label>
                         <input class="w-full px-4 py-2 bg-white/50 backdrop-blur-md border border-white/70 rounded-xl text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-[inset_1px_1px_4px_rgba(0,0,0,0.03)] text-on-surface" type="text" id="locations" name="locations" value="{{ current_locations }}" placeholder="e.g. Chennai, Bangalore" required>
                     </div>
-                    <div class="md:col-span-2 flex justify-end">
+                    <div>
                         <button type="submit" class="px-6 py-2.5 text-on-primary font-semibold text-sm rounded-lg flex items-center gap-2 neomorphic-button-primary">
-                            <span class="material-symbols-outlined text-[18px]">play_arrow</span> Save & Run Engine Background
+                            <span class="material-symbols-outlined text-[18px]">travel_explore</span> Run Full Regional Sweep
                         </button>
                     </div>
                 </form>
             </div>
 
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-on-background mb-2">Today's Top 15 Leads</h1>
-                <p class="text-lg text-on-surface-variant">High-probability targets prioritized for immediate outreach.</p>
+            <div class="mb-8 flex justify-between items-end">
+                <div>
+                    <h1 class="text-3xl font-bold text-on-background mb-2">Today's Top 15 Leads</h1>
+                    <p class="text-lg text-on-surface-variant">High-probability targets prioritized for immediate outreach.</p>
+                </div>
+                <div>
+                    <select id="categoryFilter" onchange="filterGrid()" class="px-4 py-2 bg-white/50 backdrop-blur-md border border-white/70 rounded-xl text-sm focus:border-primary/50 outline-none transition-all shadow-[inset_1px_1px_4px_rgba(0,0,0,0.03)] text-on-surface font-semibold">
+                        <option value="All">All Categories</option>
+                    </select>
+                </div>
             </div>
             
             <div class="bento-grid">
                 {% if top_leads %}
                     {% for lead in top_leads %}
-                    <div class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 neomorphic-card rounded-xl p-5 flex flex-col">
+                    <div class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 neomorphic-card rounded-xl p-5 flex flex-col lead-card" data-category="{{ lead.category }}">
                         <div class="flex justify-between items-start mb-3 gap-2">
                             <div class="flex-1 min-w-0">
                                 <h3 class="text-base font-bold text-on-surface truncate">{{ lead.business_name }}</h3>
@@ -297,6 +210,102 @@
         }
         navigator.clipboard.writeText(pitchText).then(() => {
             alert('Copied to clipboard!');
+        });
+    }
+
+    // Category Filtering
+    document.addEventListener("DOMContentLoaded", function() {
+        const filterDropdown = document.getElementById('categoryFilter');
+        if (!filterDropdown) return;
+        const cards = document.querySelectorAll('.lead-card');
+        const categories = new Set();
+        cards.forEach(card => {
+            if (card.dataset.category) categories.add(card.dataset.category);
+        });
+        Array.from(categories).sort().forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            filterDropdown.appendChild(option);
+        });
+    });
+
+    function filterGrid() {
+        const filterValue = document.getElementById('categoryFilter').value;
+        const cards = document.querySelectorAll('.lead-card');
+        cards.forEach(card => {
+            if (filterValue === "All" || card.dataset.category === filterValue) {
+                card.style.display = "flex";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+
+    // Drawer and AJAX Polling
+    let pollInterval;
+    const runForm = document.getElementById('runForm');
+    const drawer = document.getElementById('progressDrawer');
+    const drawerContent = document.getElementById('drawerContent');
+
+    if(runForm) {
+        runForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(runForm);
+            
+            fetch('/run', { method: 'POST', body: formData })
+            .then(res => res.text())
+            .then(() => {
+                drawer.classList.remove('translate-x-full');
+                startPolling();
+            });
+        });
+    }
+
+    function closeDrawer() {
+        drawer.classList.add('translate-x-full');
+        clearInterval(pollInterval);
+    }
+
+    function startPolling() {
+        if(pollInterval) clearInterval(pollInterval);
+        pollInterval = setInterval(pollStatus, 2000);
+        pollStatus();
+    }
+
+    function pollStatus() {
+        fetch('/api/status')
+        .then(res => res.json())
+        .then(data => {
+            let html = '';
+            
+            // Phase indicator
+            html += `<div class="bg-white/60 p-3 rounded-lg border border-white/40 mb-4 shadow-sm">
+                <div class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Current Phase</div>
+                <div class="text-sm font-semibold text-primary">${data.current_phase || 'Initializing...'}</div>
+            </div>`;
+
+            if(data.current_category && data.current_location) {
+                html += `<div class="bg-white/60 p-3 rounded-lg border border-white/40 mb-4 shadow-sm">
+                    <div class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Target</div>
+                    <div class="text-sm font-semibold text-on-surface">${data.current_category} in ${data.current_location}</div>
+                </div>`;
+            }
+
+            if(data.progress) {
+                html += `<div class="text-xs text-on-surface-variant mt-2 text-center">${data.progress}</div>`;
+            }
+            
+            drawerContent.innerHTML = html;
+
+            if(data.current_phase === 'Complete' || data.current_phase === 'Error' || data.current_phase === 'Idle') {
+                clearInterval(pollInterval);
+                setTimeout(() => {
+                    if (data.current_phase === 'Complete') {
+                        window.location.reload();
+                    }
+                }, 2000);
+            }
         });
     }
 </script>

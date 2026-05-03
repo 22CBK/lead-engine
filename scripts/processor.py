@@ -19,6 +19,7 @@ def init_db(db_path):
             score INTEGER,
             why_good_lead TEXT,
             suggested_pitch TEXT,
+            lagging_aspect TEXT,
             status TEXT DEFAULT 'New',
             date_added TEXT
         )
@@ -82,8 +83,8 @@ def save_leads_to_db(scored_df, ai_results_list):
         try:
             conn.execute('''
                 INSERT INTO leads 
-                (business_name, category, area, rating, reviews, website, phone, score, why_good_lead, suggested_pitch, date_added)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (business_name, category, area, rating, reviews, website, phone, score, why_good_lead, suggested_pitch, lagging_aspect, date_added)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 name,
                 row.get('category', ''),
@@ -95,6 +96,7 @@ def save_leads_to_db(scored_df, ai_results_list):
                 int(row.get('score', 0)),
                 ai_data.get('why_good_lead', ''),
                 ai_data.get('suggested_pitch', ''),
+                ai_data.get('lagging_aspect', ''),
                 date_str
             ))
         except sqlite3.IntegrityError:

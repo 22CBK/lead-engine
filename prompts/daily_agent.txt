@@ -14,15 +14,26 @@ Data:
 Task:
 1. Identify the Top 15 Leads to target today based on the data.
 2. For each of these Top 15 leads, generate:
-   - Why they are a good target (e.g., missing website, high activity but poor GMB rating showing they need reputation management).
-   - A short, personalized WhatsApp outreach message offering a specific solution (e.g., website creation, or reputation/GMB management to improve ratings). Keep it under 4 sentences, sound friendly, professional and local to Chennai.
+   - "lagging_aspect": What their digital presence is missing or failing at (e.g., "No website", "Low Rating", "No online booking").
+   - "why_good_lead": Why they are a good target (e.g., missing website, high activity but poor GMB rating showing they need reputation management).
+   - "suggested_pitch": A short, personalized WhatsApp outreach message offering a specific solution based on their lagging aspect. Keep it under 4 sentences, sound friendly, professional and local to Chennai.
 
-You MUST output ONLY a valid JSON array of objects. Do not include any markdown formatting, no introductory text, no conversational text. Just the raw JSON array.
+Instructions:
+1. Output MUST be ONLY valid JSON format.
+2. Provide a single JSON object containing a "leads" key.
+3. The value of "leads" MUST be a JSON array of objects.
+4. Each object MUST have these exact 4 string keys: "business_name", "lagging_aspect", "why_good_lead", "suggested_pitch".
+5. The "suggested_pitch" must be directly related to their "lagging_aspect".
+6. Be direct and conversational. Do not use generic filler.
+
 Format:
-[
-  {
-    "business_name": "Name of the business",
-    "why_good_lead": "Reasoning...",
-    "suggested_pitch": "The WhatsApp message..."
-  }
-]
+{
+  "leads": [
+    {
+      "business_name": "Name of the business",
+      "lagging_aspect": "Specific issue",
+      "why_good_lead": "Reasoning...",
+      "suggested_pitch": "The WhatsApp message..."
+    }
+  ]
+}

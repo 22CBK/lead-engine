@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .bento-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+  .neomorphic-card {
+      background: rgba(240, 242, 248, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 8px 8px 16px rgba(174, 174, 192, 0.4), -8px -8px 16px rgba(255, 255, 255, 0.9);
+  }
+  .neomorphic-inset {
+      background: rgba(240, 242, 248, 0.5);
+      box-shadow: inset 4px 4px 8px rgba(174, 174, 192, 0.3), inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+  .neomorphic-button {
+      background: linear-gradient(135deg, #f0f2f8, #e2e4ea);
+      box-shadow: 4px 4px 8px rgba(174, 174, 192, 0.4), -4px -4px 8px rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transition: all 0.2s ease;
+  }
+  .neomorphic-button:active { box-shadow: inset 4px 4px 8px rgba(174, 174, 192, 0.4), inset -4px -4px 8px rgba(255, 255, 255, 0.9); }
+  .neomorphic-button-primary {
+      background: linear-gradient(135deg, #818cf8, #6366f1);
+      box-shadow: 4px 4px 8px rgba(99, 102, 241, 0.3), -4px -4px 8px rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(165, 180, 252, 0.5);
+      transition: all 0.2s ease;
+  }
+  .neomorphic-button-primary:active { box-shadow: inset 4px 4px 8px rgba(67, 56, 202, 0.4), inset -4px -4px 8px rgba(165, 180, 252, 0.6); }
+  .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(174, 174, 192, 0.4); border-radius: 20px; }
+  
+  /* Slide-in animation for drawer */
+  @keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out forwards;
+  }
+}
